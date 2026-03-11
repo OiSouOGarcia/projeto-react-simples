@@ -1,7 +1,7 @@
 import Tasks from "./assets/Components/Tasks";
 import AddTask from "./assets/Components/AddTask";
 import { useState } from "react";
-
+import { v4 } from "uuid";
 function App() {
   const [tasks, setTasks] = useState([
     {
@@ -36,6 +36,20 @@ function App() {
 
     setTasks(newTasks);
   }
+  function onDeleteTaskClick(taskId) {
+    const newTasks = tasks.filter((task) => task.id !== taskId);
+    setTasks(newTasks);
+  }
+
+  function onAddTaskSubmit(title, description) {
+    const newTask = {
+      id: v4(),
+      title,
+      description,
+      isCompleted: false,
+    };
+    setTasks([...tasks, newTask]);
+  }
 
   return (
     <div className="w-screen h-screen bg-slate-500 flex justify-center p-6">
@@ -44,9 +58,13 @@ function App() {
           Gerenciador De Tarefas
         </h1>
 
-        <AddTask />
-
-        <Tasks tasks={tasks} onTaskClick={onTaskClick} />
+        <AddTask onAddTaskSubmit={onAddTaskSubmit} />
+        <Tasks
+          tasks={tasks}
+          onTaskClick={onTaskClick}
+          onDeleteTaskClick={onDeleteTaskClick}
+          onAddTaskSubmit={onAddTaskSubmit}
+        />
       </div>
     </div>
   );
